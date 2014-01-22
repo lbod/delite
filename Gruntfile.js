@@ -1,90 +1,109 @@
-/*global module */
 module.exports = function (grunt) {
+	grunt.loadNpmTasks('intern');
+//	var req = (function () {
+//		this.dojoConfig = {
+//			async: true,
+//			baseUrl: __dirname,
+//			//baseUrl: '..',
+//			packages: [
+//				{ name: 'intern', location: 'node_modules/intern' },
+//				{ name: 'when', location: 'node_modules/when', main: 'when' }
+//				//{ name: 'delite', location: '.' },
+////				{ name: 'dojo', location: '../dojo' },
+////				{ name: 'dcl', location: '../dcl' },
+//			],
+//			map: {
+//				'*': {
+//					'intern/dojo': 'intern/node_modules/dojo'
+//				}
+//			}
+//		};
+//
+//		require('intern/node_modules/dojo/dojo');
+//		return this.require;
+//	})();
 
-	// Project configuration.
 	grunt.initConfig({
-		pkg: grunt.file.readJSON("package.json"),
+		intern: {
 
-		jshint: {
-			src: [
-				// only doing top level files for now, to avoid old files in dijit/, form/, layout/, and mobile
-				"*.js",
-
-				// Skip files that still have many errors or haven't been updated at all (TODO: fix)
-				"!a11y.js",
-				"!a11yclick.js",
-				"!focus.js",
-				"!handlebars.js",
-				"!place.js",
-				"!popup.js",
-				"!template.js",
-				"!typematic.js"
-			],
-			options: {
-				jshintrc: ".jshintrc"
-			}
-		},
-
-		// Task for compiling less files into CSS files
-		less : {
-
-			// Compile theme independent files
-			transitions: {
-				expand: true,
-				cwd: "themes/common/transitions",
-				src: ["*.less"],
-				dest: "themes/common/transitions",
-				ext: ".css"
+			local: {
+				options: {
+//					loader: {
+//						baseUrl: '..',
+//						packages: [
+//						{name : 'delite', location : './delite'},
+//						{name : 'dojo', location : './dojo'},
+//						{name : 'dcl', location : './dcl'}
+//						]
+//					},
+					runType: 'runner',
+					config: 'tests-intern/intern.local',
+					reporters: ['runner']
+				}
 			},
-
-			// Infrastructure per-theme files
-			common : {
-				files: [
-					{
-						expand: true,
-						src: ["themes/*/*.less", "!themes/common/*.less", "!**/variables.less"],
-						ext: ".css"
-					}
-				]
+			remote: {
+				options: {
+					runType: 'runner',
+					config: 'tests-intern/intern',
+					reporters: ['runner']
+				}
 			},
-
-			// Compile less code for each widget
-			widgets : {
-				files: [
-					{
-						expand: true,
-						src: ["*/themes/*/*.less", "!{dijit,mobile}/themes/*/*.less"],
-						ext: ".css"
-					}
-				]
-			}
-		},
-
-		// Convert CSS files to JS files
-		cssToJs : {
-			src: [
-				"themes/*/*.css", "!themes/common/*.css", "themes/common/transitions/*.css",	// infrastructure
-				"*/themes/*/*.css", "!{dijit,mobile}/themes/*/*.css"	// widgets
-			]
-		},
-
-		// Copied from grunt web site but not tested
-		uglify: {
-			options: {
-				banner: "/*! <%= pkg.name %> <%= grunt.template.today('yyyy-mm-dd') %> */\n"
+			proxy: {
+				options: {
+					runType: 'runner',
+					proxyOnly: true,
+					config: 'tests-intern/intern.proxy',
+					reporters: ['runner']
+				}
 			},
-			build: {
-				src: "src/<%= pkg.name %>.js",
-				dest: "build/<%= pkg.name %>.min.js"
+			node: {
+				options: {
+					runType: 'client',
+					config: 'tests-intern/intern',
+					reporters: ['console']
+				}
 			}
 		}
 	});
 
-	// Load plugins
-	grunt.loadNpmTasks("grunt-contrib-jshint");
-	grunt.loadNpmTasks("grunt-contrib-less");
-	grunt.loadNpmTasks("grunt-contrib-uglify");
-	grunt.loadTasks("themes/tasks");// Custom cssToJs task to convert CSS to JS
+	var servicesServer;
+//	grunt.registerTask('proxy', function () {
+//		var done = this.async();
+//		req(['delite/tests-intern/services/main'], function (services) {
+//			services.start().then(function (server) {
+//				servicesServer = server;
+//				done(true);
+//			});
+//		});
+//	});
 
-	grunt.registerTask("default", ["less", "cssToJs"]);
+	grunt.registerTask('test', function (target) {
+		if (!target || target === 'coverage') {
+			target = 'remote';
+		}
+
+		function addReporter(reporter) {
+			var property = 'intern.' + target + '.options.reporters',
+				value = grunt.config.get(property);
+
+			if (value.indexOf(reporter) !== -1) {
+				return;
+			}
+
+			value.push(reporter);
+			grunt.config.set(property, value);
+		}
+		if (this.flags.coverage) {
+			addReporter('lcovhtml');
+		}
+
+		if (this.flags.console) {
+			addReporter('console');
+		}
+
+//		if (target !== 'node') {
+//			grunt.task.run('proxy');
+//		}
+		grunt.task.run('intern:' + target);
+	});
 };
