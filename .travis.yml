@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+  - "0.10"
+env:
+  global:
+    - SAUCE_USERNAME: lbod
+    - SAUCE_ACCESS_KEY: ee40c732-8012-4963-bdc0-4cdbb2b1f99b
+
+install:
+   - npm install -g grunt-cli
+   - npm -g install bower
+   - npm install
+   - bower install
+
+# remember to remove intern/lib/reporters/console once the nest npm versioned intern is released
+script:
+   - grunt test:remote:intern/lib/reporters/console
