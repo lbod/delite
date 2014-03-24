@@ -5,7 +5,8 @@
 		"dojo": ">=1.9.1",
 		"requirejs": "2.1.x",
 		"dcl": "1.1.x",
-		"dpointer": ">=0.1.0-dev"
+		"dpointer": ">=0.1.0-dev",
+		"deliteful": ">=0"
 	},
 	"devDependencies": {
 		"platform": "Polymer/platform#~0.1.4"
