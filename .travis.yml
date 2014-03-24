@@ -14,4 +14,4 @@ install:
 
 # remember to remove intern/lib/reporters/console once the nest npm versioned intern is released
 script:
-   - grunt test:remote
+   - grunt test:remote:intern/lib/reporters/console

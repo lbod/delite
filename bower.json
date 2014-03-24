@@ -5,8 +5,7 @@
 		"dojo": ">=1.9.1",
 		"requirejs": "2.1.x",
 		"dcl": "1.1.x",
-		"dpointer": ">=0.1.0-dev",
-		"deliteful": "git://github.com/ibm-dojo/deliteful.git"
+		"dpointer": ">=0.1.0-dev"
 	},
 	"devDependencies": {
 		"platform": "Polymer/platform#~0.1.4"
