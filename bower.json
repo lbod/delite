@@ -6,7 +6,7 @@
 		"requirejs": "2.1.x",
 		"dcl": "1.1.x",
 		"dpointer": ">=0.1.0-dev",
-		"deliteful": "https://github.com/ibm-js/deliteful.git"
+		"deliteful": "https://github.com/ibm-js/deliteful.git ."
 	},
 	"devDependencies": {
 		"platform": "Polymer/platform#~0.1.4"
