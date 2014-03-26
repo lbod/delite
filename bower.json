@@ -6,7 +6,8 @@
 		"requirejs": "2.1.x",
 		"dcl": "1.1.x",
 		"dpointer": ">=0.1.0-dev",
-		"deliteful": ">=0.1.0"
+		"dstore" : "git://github.com/SitePen/dstore.git",
+		"deliteful": "git://github.com/ibm-dojo/deliteful.git"
 	},
 	"devDependencies": {
 		"platform": "Polymer/platform#~0.1.4"

@@ -9,18 +9,18 @@ env:
 install:
    - echo `pwd`
    - npm install -g grunt-cli
-   # - npm -g install bower
+   - npm -g install bower
    - npm install
-   # - bower install
+   - bower install
    - echo "lee where am i"
    - echo `pwd`
-   - cd ..
-   - git clone https://github.com/uhop/dcl.git
-   - git clone https://github.com/dojo/dojo.git
-   - git clone https://github.com/ibm-js/deliteful.git
-   - git clone https://github.com/ibm-js/dpointer.git
-   - git clone https://github.com/SitePen/dstore.git
-   - cd delite
+   # - cd ..
+   # - git clone https://github.com/uhop/dcl.git
+   # - git clone https://github.com/dojo/dojo.git
+   # - git clone https://github.com/ibm-js/deliteful.git
+   # - git clone https://github.com/ibm-js/dpointer.git
+   # - git clone https://github.com/SitePen/dstore.git
+   # - cd delite
 
 # remember to remove intern/lib/reporters/console once the nest npm versioned intern is released
 script:
