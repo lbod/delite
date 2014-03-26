@@ -24,7 +24,8 @@ install:
 
 # remember to remove intern/lib/reporters/console once the nest npm versioned intern is released
 script:
-   - grunt test:remote
+   # - grunt test:remote
+   - node node_modules/intern/runner.js config=tests/intern
 notifications:
   email:
     on_failure : "change"
