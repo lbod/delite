@@ -19,6 +19,7 @@ install:
    - git clone https://github.com/dojo/dojo.git
    - git clone https://github.com/ibm-js/deliteful.git
    - git clone https://github.com/ibm-js/dpointer.git
+   - git clone https://github.com/SitePen/dstore.git
    - cd delite
 
 # remember to remove intern/lib/reporters/console once the nest npm versioned intern is released
