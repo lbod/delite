@@ -101,7 +101,7 @@ module.exports = function (grunt) {
 				options: {
 					runType: "runner",
 					config: "tests/intern",
-					reporters: ["runner"]
+					reporters: ["runner", "console"]
 				}
 			}
 		}
