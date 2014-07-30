@@ -1,0 +1,24 @@
+<html>
+	<head>
+        <script type="text/javascript" src="../../../requirejs/require.js"></script>
+		<script>
+			require.config({
+				baseUrl: "../../..",
+				paths: {
+					"attach-node-element-package": "delite/samples/AttachNodeWidget"
+				}
+			});
+			require(["delite/register", "attach-node-element-package/AttachNodeWidget"], function (register) {
+				register.parse();
+			});
+		</script>
+	</head>
+	<body>
+        <attach-node-element id="element2" someProperty="i am a widget property">
+            <div data-attach-point="containerNode">
+                <h4>declarative containerNode</h4>
+                <p> I am more arbitrary html</p>
+            </div>
+        </attach-node-element>
+    </body>
+</html>

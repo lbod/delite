@@ -86,6 +86,18 @@ define(["./register"], function (register) {
 					buildText.push(
 						nodeName + ".appendChild(" + childName + ");"
 					);
+					// if the attr contains data-attach-point="containerNode"
+					if (child.attachPoints && child.attachPoints[0] == 'containerNode') { //obviously this is naff, just testing for the moment
+						var replacerNodeName = "childNameAttachNode" + childName;
+						buildText.push(
+							"var " + replacerNodeName + " = " + "this" + ".querySelector('[data-attach-point=\"containerNode\"]', '[attach-point=\"containerNode\"]');",
+							"console.log(" + replacerNodeName + ");",
+							"if (" + replacerNodeName + ") {",
+							"this.containerNode = " + replacerNodeName + ";",
+							childName + ".parentNode.replaceChild(this.containerNode, " + childName + "); }"
+						);
+
+					}
 				} else {
 					// JS code to compute text value
 					var textNodeName = childName + "t" + (idx + 1);

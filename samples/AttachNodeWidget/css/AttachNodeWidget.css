@@ -1,0 +1,10 @@
+/* style for the custom element itself */
+.attach-node-element {
+	display: block;
+    border : 2px solid blue;
+}
+
+.attach-node-element h3 {
+	color: red;
+}
+
