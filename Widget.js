@@ -167,6 +167,17 @@ define([
 		 */
 		template: null,
 
+		/*
+		 * Not sure about this yet, just returning a copy of the original declarative nodes as an array
+		 */
+		_buildHost : function () {
+			var saved = this.ownerDocument.createDocumentFragment();
+			while (this.childNodes.length > 0) {
+				saved.appendChild(this.firstChild);
+			}
+			return Array.prototype.slice.call(saved.childNodes);
+		},
+
 		/**
 		 * Construct the UI for this widget, filling in subnodes and/or text inside of this.
 		 * Most widgets will leverage delite/handlebars! to set `template`, rather than defining this method.
@@ -174,7 +185,82 @@ define([
 		 */
 		buildRendering: function () {
 			if (this.template) {
+				var hostNodesArray = this._buildHost();
 				this._templateHandle = this.template(this.ownerDocument, register);
+
+				var contentNodes = this.getElementsByTagName("content");
+				var contentNodesArray = Array.prototype.slice.call(contentNodes);
+				this._parseContentNodes(contentNodesArray, hostNodesArray);
+			}
+		},
+		/*
+		 * Pointer to the mapped content to declarative host nodes from the template
+		 *  [{select : "", node : node}]
+		 */
+		_shadowHostNodes : [],
+
+		/*
+		 * Parse all content nodes from the template, matching any declarative host nodes and map to _shadowHostNodes
+		 */
+
+		_parseContentNodes : function (contentNodesArray, hostNodesArray) {
+			var select = null, contentNode = null, hostNode = null;
+
+			for (var i = 0; i < contentNodesArray.length; i++) {
+				contentNode = contentNodesArray[i];
+				select = contentNode.getAttribute("select");
+				if (select) {
+					for (var j = 0; j < hostNodesArray.length; j++) {
+						hostNode = hostNodesArray[j];
+						if (hostNode.nodeType === 1 && hostNode[has("dom-matches")](select)) {
+							this._shadowHostNodes.push({select : select, node : hostNode});
+							contentNode.parentNode.replaceChild(hostNode, contentNode);
+							hostNodesArray.splice(j, 1);
+							j--;
+						}
+					}
+				}
+				else {
+					var docFrag = document.createDocumentFragment();
+					for (var k = 0; k < hostNodesArray.length; k++) {
+						hostNode = hostNodesArray[k];
+						docFrag.appendChild(hostNodesArray[k]);
+						hostNodesArray.splice(k, 1);
+						k--;
+					}
+
+					this._shadowHostNodes.push({select : "universal", node : docFrag.cloneNode(true)});
+					contentNode.parentNode.replaceChild(docFrag, contentNode);
+				}
+			}
+			// remove any remaining content nodes
+			var contentNodes = this.getElementsByTagName("content");
+			for (var l = contentNodes.length - 1; l > -1; l--) {
+				contentNodes[l].parentNode.removeChild(contentNodes[l]);
+			}
+		},
+
+		/**
+		 * this is to be used with _parseContentNodes
+		 * arguments are p: String (the content selector, node : node (the node replacer)
+		 *  todo: take a node or string
+		 */
+		setContentNode : function (select, node) {
+			var match = null;
+			this._shadowHostNodes.some(function (host) {
+				if (host.select === select) {
+					match = host;
+					return true;
+				}
+				return false;
+			}, this);
+			if (match) {
+				if (match.select === "universal") {
+					match.node.innerHTML = node;
+				} else {
+					match.node.innerHTML = node;
+				}
+
 			}
 		},
 

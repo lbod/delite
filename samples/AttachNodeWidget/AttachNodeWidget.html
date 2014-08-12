@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+        <script type="text/javascript" src="../../../requirejs/require.js"></script>
+		<script>
+			require.config({
+				baseUrl: "../../..",
+				paths: {
+					"attach-node-element-package": "delite/samples/AttachNodeWidget"
+				}
+			});
+			require(["delite/register", "attach-node-element-package/AttachNodeWidget"], function (register) {
+				register.parse();
+			});
+		</script>
+	</head>
+	<body>
+        <attach-node-element id="element2" someProperty="i am a widget property">
+            i'm a text node that should be matched via <code>&lt;content&gt;&lt;/content&gt;</code> <br>
+            <h1>declarative h1</h1>
+            <span>I'm a span node that should be matched via <code>&lt;content&gt;&lt;/content&gt;</code></span>
+            <h4>declarative h4</h4>
+            <p>declarative p</p>
+            <h3>some other element that should be matched via <code>&lt;content&gt;&lt;/content&gt;</code></h3>
+
+        </attach-node-element>
+    </body>
+</html>
