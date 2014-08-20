@@ -185,6 +185,7 @@ define([
 		 */
 		buildRendering: function () {
 			if (this.template) {
+				this._shadowHostNodes = [];
 				var hostNodesArray = this._buildHost();
 				this._templateHandle = this.template(this.ownerDocument, register);
 
@@ -197,7 +198,7 @@ define([
 		 * Pointer to the mapped content to declarative host nodes from the template
 		 *  [{select : "", node : node}]
 		 */
-		_shadowHostNodes : [],
+		_shadowHostNodes : null,
 
 		/*
 		 * Parse all content nodes from the template, matching any declarative host nodes and map to _shadowHostNodes
@@ -256,7 +257,12 @@ define([
 			}, this);
 			if (match) {
 				if (match.select === "universal") {
-					match.node.innerHTML = node;
+					match.node.innerHTML = node;// TODO
+//					var child = document.createElement("div");
+//					debugger;
+//					child.innerHTML = node;
+//					match.node.replaceChild(child, match);
+
 				} else {
 					match.node.innerHTML = node;
 				}
