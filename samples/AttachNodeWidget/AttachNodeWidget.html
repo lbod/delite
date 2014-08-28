@@ -9,20 +9,29 @@
 					"attach-node-element-package": "delite/samples/AttachNodeWidget"
 				}
 			});
-			require(["delite/register", "attach-node-element-package/AttachNodeWidget"], function (register) {
+			require(["delite/register", "attach-node-element-package/AttachNodeWidget"], function (register, AttachNodeWidget) {
 				register.parse();
+				var programmaticWidget = new AttachNodeWidget({id: "progId", someProperty: "i am a property set from a <b>programmatic widget</b>"});
+				programmaticWidget.startup();
+				programmaticWidget.setContentNode("universal", "<b>i am a programmatic created universal node</b><br/>using other selectors via setContentNode won't work");
+				programmaticWidget.placeAt("programmaticNode");
 			});
 		</script>
 	</head>
 	<body>
         <attach-node-element id="element2" someProperty="i am a widget property">
-            i'm a text node that should be matched via <code>&lt;content&gt;&lt;/content&gt;</code> <br>
             <h1>declarative h1</h1>
-            <span>I'm a span node that should be matched via <code>&lt;content&gt;&lt;/content&gt;</code></span>
-            <h4>declarative h4</h4>
             <p>declarative p</p>
-            <h3>some other element that should be matched via <code>&lt;content&gt;&lt;/content&gt;</code></h3>
-
+            <div>i'm just a div that gets collected by the <code>&lt;content&gt;&lt;/content&gt;</code> node.</div>
         </attach-node-element>
+
+        <div style="border: 4px solid yellowgreen; margin-top: 5px;" id="programmaticNode">
+        </div>
+
+        <div style="border: 2px solid red; margin-top: 5px;">
+            Use like:
+            <p><code>element2.setContentNode("universal", "&lt;h4&gt;ive been set via setContent on a &lt;b&gt;universal node&lt;/b&gt;&lt;/h4&gt;")</code></p>
+            <p><code>element2.setContentNode("p", "&lt;div&gt;ive been set via setContent on a &lt;b&gt;p select node&lt;/b&gt;&lt;/div&gt;")</code></p>
+        </div>
     </body>
 </html>

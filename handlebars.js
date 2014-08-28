@@ -93,6 +93,7 @@ define(["./Template"], function (Template) {
 		 * @private
 		 */
 		parse: function (templateNode, xmlns) {
+			/*jshint maxcomplexity:12*/ // TODO : refactor
 			// Get tag name, reversing the tag renaming done in parse()
 			var tag = templateNode.hasAttribute("is") ? templateNode.getAttribute("is") :
 					templateNode.tagName.replace(/^template-/i, "").toLowerCase(),
@@ -101,6 +102,16 @@ define(["./Template"], function (Template) {
 			// Process attributes
 			var attributes = {}, connects = {}, attachPoints;
 			var i = 0, item, attrs = templateNode.attributes;
+			if (templateNode.tagName.toLowerCase() === "template-content") {
+				return {
+					tag: tag,
+					select : attrs.select ? attrs.select.value : "universal",
+					attributes: attributes,
+					connects: connects,
+					children: [],
+					attachPoints: attachPoints
+				};
+			}
 			for (i = 0; (item = attrs[i]); i++) {
 				if (item.value) {
 					switch (item.name) {

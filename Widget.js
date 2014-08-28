@@ -188,10 +188,8 @@ define([
 				this._shadowHostNodes = [];
 				var hostNodesArray = this._buildHost();
 				this._templateHandle = this.template(this.ownerDocument, register);
-
-				var contentNodes = this.getElementsByTagName("content");
-				var contentNodesArray = Array.prototype.slice.call(contentNodes);
-				this._parseContentNodes(contentNodesArray, hostNodesArray);
+				this.contentNodes = this._templateHandle.contentNodes;
+				this._parseContentNodes(this.contentNodes, hostNodesArray);
 			}
 		},
 		/*
@@ -200,22 +198,23 @@ define([
 		 */
 		_shadowHostNodes : null,
 
-		/*
+		/**
+		 * Private method, needs to be worked on but some pre-processing after buildRendering needs to happen to
+		 * populate the live dom. Not sure whether this should use setContentNode.
 		 * Parse all content nodes from the template, matching any declarative host nodes and map to _shadowHostNodes
 		 */
 
 		_parseContentNodes : function (contentNodesArray, hostNodesArray) {
 			var select = null, contentNode = null, hostNode = null;
-
 			for (var i = 0; i < contentNodesArray.length; i++) {
 				contentNode = contentNodesArray[i];
-				select = contentNode.getAttribute("select");
-				if (select) {
+				select = contentNode.select;
+				if (select && select !== "universal") {
 					for (var j = 0; j < hostNodesArray.length; j++) {
 						hostNode = hostNodesArray[j];
 						if (hostNode.nodeType === 1 && hostNode[has("dom-matches")](select)) {
 							this._shadowHostNodes.push({select : select, node : hostNode});
-							contentNode.parentNode.replaceChild(hostNode, contentNode);
+							contentNode.node.parentNode.replaceChild(hostNode, contentNode.node);
 							hostNodesArray.splice(j, 1);
 							j--;
 						}
@@ -229,19 +228,16 @@ define([
 						hostNodesArray.splice(k, 1);
 						k--;
 					}
-
-					this._shadowHostNodes.push({select : "universal", node : docFrag.cloneNode(true)});
-					contentNode.parentNode.replaceChild(docFrag, contentNode);
+					var container = document.createElement("content");
+					container.appendChild(docFrag.cloneNode(true));
+					this._shadowHostNodes.push({select : "universal", node : container});
+					contentNode.node.parentNode.replaceChild(container, contentNode.node);
 				}
-			}
-			// remove any remaining content nodes
-			var contentNodes = this.getElementsByTagName("content");
-			for (var l = contentNodes.length - 1; l > -1; l--) {
-				contentNodes[l].parentNode.removeChild(contentNodes[l]);
 			}
 		},
 
 		/**
+		 * Public method to call and set content node contents.
 		 * this is to be used with _parseContentNodes
 		 * arguments are p: String (the content selector, node : node (the node replacer)
 		 *  todo: take a node or string
@@ -256,17 +252,7 @@ define([
 				return false;
 			}, this);
 			if (match) {
-				if (match.select === "universal") {
-					match.node.innerHTML = node;// TODO
-//					var child = document.createElement("div");
-//					debugger;
-//					child.innerHTML = node;
-//					match.node.replaceChild(child, match);
-
-				} else {
-					match.node.innerHTML = node;
-				}
-
+				match.node.innerHTML = node;
 			}
 		},
 

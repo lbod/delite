@@ -74,18 +74,23 @@ define(["./register"], function (register) {
 			this.buildText = [];	// code to build the initial DOM
 			this.observeText = [];	// code to update the DOM when widget properties change
 			this.dependsOn = {};	// set of properties referenced in the template
+			this.contentNodes = []; // map of selects to content nodes
 
 			this.generateNodeCode(rootNodeName || "this", createRootNode, tree);
-
+			var contentNodesReturn = [];
+			this.contentNodes.forEach(function (item) {
+				contentNodesReturn.push("{'select': '" + item.select + "', 'node' : " + item.nodeName + "}");
+			}, this);
+			contentNodesReturn = "[" + contentNodesReturn.join() + "]";
 			// Generate text of function.
 			this.text = this.buildText.join("\n") + "\n" +
 				"return {\n" +
 					"\tdependencies: " + JSON.stringify(Object.keys(this.dependsOn)) + ",\n" +
 					"\trefresh: function(props){\n\t\t" +
 						this.observeText.join("\n\t\t") +
-					"\n\t}.bind(this)\n" +
+					"\n\t}.bind(this),\n" +
+					"\tcontentNodes: " + contentNodesReturn + "\n" +
 				"};\n";
-
 			/* jshint evil:true */
 			this.func = new Function("document", "register", this.text);
 		},
@@ -170,7 +175,6 @@ define(["./register"], function (register) {
 			var ap = (templateNode.attachPoints || []).map(function (n) {
 				return  "this." + n + " = ";
 			}).join("");
-
 			// Create node
 			if (createNode) {
 				this.buildText.push(
@@ -178,6 +182,12 @@ define(["./register"], function (register) {
 					"document.createElementNS('" + templateNode.xmlns + "', '" + templateNode.tag + "');" :
 					"register.createElement('" + templateNode.tag + "');")
 				);
+				if (templateNode.tag.toLowerCase() === "content") {
+					this.contentNodes.push({"select" : templateNode.select, nodeName : nodeName});
+					this.buildText.push(
+						nodeName + ".setAttribute('select', '" + templateNode.select + "');"
+					);
+				}
 			} else if (ap) {
 				// weird case that someone set attach-point on root node
 				this.buildText.push(ap + nodeName + ";");
