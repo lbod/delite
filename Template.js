@@ -77,9 +77,8 @@ define(["./register"], function (register) {
 			this.contentNodes = []; // map of selects to content nodes
 
 			this.generateNodeCode(rootNodeName || "this", createRootNode, tree);
-			var contentNodesReturn = [];
-			this.contentNodes.forEach(function (item) {
-				contentNodesReturn.push("{'select': '" + item.select + "', 'node' : " + item.nodeName + "}");
+			var contentNodesReturn = this.contentNodes.map(function (item) {
+				return "{'select': '" + item.select + "', 'node' : " + item.nodeName + "}";
 			}, this);
 			contentNodesReturn = "[" + contentNodesReturn.join() + "]";
 			// Generate text of function.

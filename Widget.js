@@ -189,7 +189,7 @@ define([
 				var hostNodesArray = this._buildHost();
 				this._templateHandle = this.template(this.ownerDocument, register);
 				this.contentNodes = this._templateHandle.contentNodes;
-				this._parseContentNodes(this.contentNodes, hostNodesArray);
+				this._parseContentNodes(hostNodesArray);
 			}
 		},
 		/*
@@ -204,10 +204,10 @@ define([
 		 * Parse all content nodes from the template, matching any declarative host nodes and map to _shadowHostNodes
 		 */
 
-		_parseContentNodes : function (contentNodesArray, hostNodesArray) {
+		_parseContentNodes : function (hostNodesArray) {
 			var select = null, contentNode = null, hostNode = null;
-			for (var i = 0; i < contentNodesArray.length; i++) {
-				contentNode = contentNodesArray[i];
+			for (var i = 0; i < this.contentNodes.length; i++) {
+				contentNode = this.contentNodes[i];
 				select = contentNode.select;
 				if (select && select !== "universal") {
 					for (var j = 0; j < hostNodesArray.length; j++) {

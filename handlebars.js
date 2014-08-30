@@ -97,20 +97,14 @@ define(["./Template"], function (Template) {
 			// Get tag name, reversing the tag renaming done in parse()
 			var tag = templateNode.hasAttribute("is") ? templateNode.getAttribute("is") :
 					templateNode.tagName.replace(/^template-/i, "").toLowerCase(),
-				elem = Template.getElement(tag);
+				elem = Template.getElement(tag),
+				select = null;
 
 			// Process attributes
 			var attributes = {}, connects = {}, attachPoints;
 			var i = 0, item, attrs = templateNode.attributes;
 			if (templateNode.tagName.toLowerCase() === "template-content") {
-				return {
-					tag: tag,
-					select : attrs.select ? attrs.select.value : "universal",
-					attributes: attributes,
-					connects: connects,
-					children: [],
-					attachPoints: attachPoints
-				};
+				select = attrs.select ? attrs.select.value : "universal";
 			}
 			for (i = 0; (item = attrs[i]); i++) {
 				if (item.value) {
@@ -154,7 +148,8 @@ define(["./Template"], function (Template) {
 				attributes: attributes,
 				connects: connects,
 				children: handlebars.parseChildren(templateNode, xmlns),
-				attachPoints: attachPoints
+				attachPoints: attachPoints,
+				select : select
 			};
 		},
 
