@@ -16,5 +16,6 @@ define([
 	"./Store",
 	"./Scrollable",
 	"./KeyNav",
-	"./FormValueWidget"
+	"./FormValueWidget",
+	"./place"
 ]);
