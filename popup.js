@@ -400,10 +400,10 @@ define([
 
 			if (orient[0] === "center") {
 				// Limit height and width so dialog fits within viewport.
-				wrapper.style.height = args._naturalHeight > viewport.h * 0.9 ? Math.floor(viewport.h * 0.9) + "px" :
-					"auto";
-				wrapper.style.width = args._naturalWidth > viewport.w * 0.9 ? Math.floor(viewport.w * 0.9) + "px" :
-					"auto";
+				wrapper.style.height = args._naturalHeight >= Math.floor(viewport.h * 0.9) ?
+					Math.floor(viewport.h * 0.9) + "px" : "auto";
+				wrapper.style.width = args._naturalWidth >= Math.floor(viewport.w * 0.9) ?
+					Math.floor(viewport.w * 0.9) + "px" : "auto";
 			} else {
 				// Limit height to space available in viewport either above or below aroundNode (whichever side has
 				// more room).  This may make the popup widget display a scrollbar (or multiple scrollbars).
